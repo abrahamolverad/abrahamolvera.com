@@ -1,3 +1,5 @@
+import React from 'react';
+
 export interface Venture {
   id: string;
   name: string;

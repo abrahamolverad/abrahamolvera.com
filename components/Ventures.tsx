@@ -1,106 +1,107 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { VENTURES, Icons } from '../constants';
 
 const Ventures: React.FC = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+      const { top, height } = sectionRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // Calculate progress: 0 when section hits top, 1 when section finishes
+      const distance = height - windowHeight;
+      const scrolled = -top;
+      const progress = Math.min(Math.max(scrolled / distance, 0), 1);
+      
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Reduced height from 400vh to 250vh for faster scrolling
   return (
-    <section id="ventures" className="py-32 bg-surface relative z-10">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-20">
-            <div>
-                <h2 className="font-display font-bold text-5xl md:text-7xl mb-4">Selected<br/>Works</h2>
-                <div className="h-2 w-24 bg-primary rounded-full"></div>
-            </div>
-            <p className="text-gray-400 mt-6 md:mt-0 max-w-sm text-right">
-                An ecosystem of companies bridging the gap between human creativity and artificial intelligence.
-            </p>
+    <section ref={sectionRef} id="ventures" className="relative h-[250vh] bg-background">
+      <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center perspective-1000">
+        
+        {/* Section Header */}
+        <div className="absolute top-12 left-6 md:left-20 z-20 transition-opacity duration-300" style={{ opacity: Math.max(0, 1 - scrollProgress * 4) }}>
+           <h2 className="font-display font-bold text-4xl md:text-6xl text-white">PROYECTOS</h2>
+           <p className="text-gray-400 mt-2 font-mono text-sm uppercase tracking-widest animate-pulse">Scroll to Explore &rarr;</p>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[400px]">
-            
-            {/* Main Large Card - The AIgnc */}
-            <div className="md:col-span-2 group relative rounded-3xl overflow-hidden bg-gray-900 border border-gray-800">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 to-black z-0"></div>
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2565&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay group-hover:scale-105 transition-transform duration-700"></div>
-                
-                <div className="relative z-10 p-10 h-full flex flex-col justify-between">
-                    <div className="flex justify-between items-start">
-                        <div className="p-3 bg-white/10 backdrop-blur-md rounded-xl">
-                            <Icons.BrainCircuit className="text-blue-400" size={32} />
-                        </div>
-                        <a href="#" className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-black px-4 py-2 rounded-full text-sm font-bold">Visit Site</a>
-                    </div>
-                    
-                    <div>
-                        <h3 className="font-display text-4xl font-bold mb-2">The AIgnc</h3>
-                        <p className="text-gray-300 max-w-md">Global agency specializing in enterprise AI implementation and workflow automation.</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Tall Card - Rok-ai */}
-            <div className="md:col-span-1 md:row-span-2 group relative rounded-3xl overflow-hidden bg-[#050505] border border-gray-800">
-                <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 to-black z-0"></div>
-                <div className="absolute top-0 right-0 p-32 bg-purple-600/20 blur-[100px]"></div>
-
-                <div className="relative z-10 p-10 h-full flex flex-col">
-                    <div className="mb-auto">
-                        <div className="p-3 w-fit bg-purple-500/10 rounded-xl mb-6">
-                            <Icons.Mic className="text-purple-400" size={28} />
-                        </div>
-                        <h3 className="font-display text-4xl font-bold mb-4">Rok-ai</h3>
-                        <div className="inline-block px-3 py-1 border border-purple-500/30 rounded-full text-purple-400 text-xs font-bold uppercase mb-6">Coming Soon</div>
-                        <p className="text-gray-400 text-sm leading-relaxed">
-                            Unfiltered conversations about the singularity, digital evolution, and the future of humanity.
-                        </p>
-                    </div>
-                    
-                    <div className="mt-8 pt-8 border-t border-white/5">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center">
-                                <span className="animate-pulse w-2 h-2 bg-red-500 rounded-full"></span>
-                            </div>
+        {/* Horizontal Container */}
+        <div 
+            ref={scrollRef}
+            className="flex items-center gap-8 md:gap-16 px-[10vw] will-change-transform"
+            style={{ 
+                transform: `translateX(-${scrollProgress * 75}%)` // Faster movement ratio
+            }}
+        >
+            {VENTURES.map((venture, index) => (
+                <div 
+                    key={venture.id}
+                    className="relative flex-shrink-0 w-[85vw] md:w-[60vw] h-[60vh] md:h-[70vh] group perspective-1000"
+                >
+                     {/* Card Content with 3D Rotate Effect on Hover */}
+                    <div className="w-full h-full bg-[#080808] border border-white/10 rounded-[3rem] overflow-hidden relative flex flex-col md:flex-row transition-all duration-500 hover:scale-[1.01] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] group-hover:border-white/20">
+                        
+                        {/* Background Gradient */}
+                        <div className={`absolute inset-0 bg-gradient-to-br ${venture.color} opacity-10 group-hover:opacity-20 transition-opacity duration-500`}></div>
+                        
+                        {/* Text Content */}
+                        <div className="relative z-10 flex-1 p-8 md:p-12 flex flex-col justify-between">
                             <div>
-                                <p className="text-sm font-bold text-white">Latest Episode</p>
-                                <p className="text-xs text-gray-500">Recording in progress...</p>
+                                <span className="font-mono text-xs border border-white/20 px-3 py-1 rounded-full text-gray-300 backdrop-blur-md">0{index + 1}</span>
+                                <h3 className="font-display font-bold text-4xl md:text-6xl mt-8 mb-6 text-white leading-none">
+                                    {venture.name}
+                                </h3>
+                                <p className="text-gray-400 text-lg md:text-xl leading-relaxed max-w-md">
+                                    {venture.description}
+                                </p>
+                            </div>
+                            <div className="flex items-center gap-4 mt-8">
+                                <span className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest ${
+                                    venture.status === 'Active' ? 'bg-white text-black' : 'bg-white/10 text-white'
+                                }`}>
+                                    {venture.status === 'Active' ? 'Live Now' : venture.status}
+                                </span>
+                                <a href={venture.link || '#'} className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
+                                    <Icons.TrendingUp size={20} />
+                                </a>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
 
-            {/* Square Card - Avant Media */}
-            <div className="md:col-span-1 group relative rounded-3xl overflow-hidden bg-gray-900 border border-gray-800">
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-900/20 to-black z-0"></div>
-                <div className="relative z-10 p-8 h-full flex flex-col justify-between">
-                     <div className="p-3 w-fit bg-orange-500/10 rounded-xl">
-                        <Icons.Sparkles className="text-orange-400" size={28} />
-                    </div>
-                    <div>
-                        <h3 className="font-display text-3xl font-bold mb-2">Avant Media</h3>
-                        <p className="text-gray-400 text-sm">High-impact media production house for the digital age.</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Square Card - Personal Branding */}
-            <div className="md:col-span-1 group relative rounded-3xl overflow-hidden bg-white text-black border border-gray-200">
-                <div className="relative z-10 p-8 h-full flex flex-col justify-between">
-                    <div className="flex justify-between items-start">
-                        <Icons.Instagram size={32} />
-                        <Icons.TrendingUp size={32} />
-                    </div>
-                    <div>
-                        <div className="text-5xl font-display font-extrabold mb-2">250K+</div>
-                        <p className="font-medium opacity-80">Community across platforms</p>
-                        <div className="flex gap-2 mt-4">
-                             <a href="#" className="p-2 rounded-full bg-black/5 hover:bg-black/10 transition-colors"><Icons.Instagram size={16}/></a>
-                             <a href="#" className="p-2 rounded-full bg-black/5 hover:bg-black/10 transition-colors"><Icons.TikTok size={16}/></a>
+                        {/* Image/Graphic Area */}
+                        <div className="relative flex-1 bg-white/5 overflow-hidden flex items-center justify-center">
+                             <div className={`absolute inset-0 bg-gradient-to-t ${venture.color} opacity-20 mix-blend-overlay`}></div>
+                             
+                             {/* Floating Icon */}
+                             <div className="transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-12 text-white/10 group-hover:text-white/20 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                                {index === 0 && <Icons.Mic size={200} />}
+                                {index === 1 && <Icons.BrainCircuit size={200} />}
+                                {index === 2 && <Icons.Sparkles size={200} />}
+                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
+            ))}
+            
+            {/* Call to Action Card */}
+             <div className="relative flex-shrink-0 w-[85vw] md:w-[40vw] h-[60vh] md:h-[70vh] flex items-center justify-center bg-white/5 rounded-[3rem] border border-white/10 hover:bg-white/10 transition-colors cursor-pointer group">
+                 <div className="text-center group-hover:scale-105 transition-transform duration-300">
+                     <h3 className="font-display font-bold text-5xl text-white mb-6">¿Qué sigue?</h3>
+                     <a href="#contact" className="inline-block border-b-2 border-primary text-2xl pb-2 text-gray-300 hover:text-white transition-colors">
+                        Iniciemos un proyecto &rarr;
+                     </a>
+                 </div>
+             </div>
         </div>
       </div>
     </section>

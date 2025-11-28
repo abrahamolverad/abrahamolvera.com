@@ -1,74 +1,221 @@
-import React from 'react';
-import { Icons } from '../constants';
+import React, { useEffect, useRef, useState } from 'react';
+
+// Physics Configuration
+const FRICTION = 0.98;
+const MOUSE_REPULSION = 1000;
+
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  radius: number;
+  mass: number;
+}
 
 const Hero: React.FC = () => {
-  return (
-    <section id="home" className="relative min-h-screen flex flex-col justify-center pt-20 overflow-hidden bg-background">
-      {/* Cinematic Background Blurs */}
-      <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] bg-primary/10 rounded-full blur-[150px] pointer-events-none"></div>
-      
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col items-center text-center">
+  const [scrollY, setScrollY] = useState(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Physics State
+  const particles = useRef<Particle[]>([]);
+  const animationFrameId = useRef<number>(0);
+  const mouse = useRef({ x: -1000, y: -1000 });
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    const handleMouseMove = (e: MouseEvent) => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        mouse.current = {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    return () => {
+        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  // Initialize and Run Physics Engine
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Initialize Particles (Bubbles)
+    const initParticles = () => {
+        particles.current = Array.from({ length: 12 }).map(() => {
+            const radius = 40 + Math.random() * 90; // Slightly larger for better 3D effect
+            return {
+                x: Math.random() * (canvas.width - radius * 2) + radius,
+                y: Math.random() * (canvas.height - radius * 2) + radius,
+                vx: (Math.random() - 0.5) * 1.5,
+                vy: (Math.random() - 0.5) * 1.5,
+                radius,
+                mass: radius
+            };
+        });
+    };
+    initParticles();
+
+    const update = () => {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.current.forEach((p, i) => {
+            // Apply Velocity
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // Apply Friction
+            p.vx *= FRICTION;
+            p.vy *= FRICTION;
+
+            // Wall Collisions
+            if (p.x - p.radius < 0) { p.x = p.radius; p.vx *= -1; }
+            if (p.x + p.radius > canvas.width) { p.x = canvas.width - p.radius; p.vx *= -1; }
+            if (p.y - p.radius < 0) { p.y = p.radius; p.vy *= -1; }
+            if (p.y + p.radius > canvas.height) { p.y = canvas.height - p.radius; p.vy *= -1; }
+
+            // Mouse Repulsion
+            const dx = p.x - mouse.current.x;
+            const dy = p.y - mouse.current.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
             
-            {/* Status Pill */}
-            <div className="mb-8 animate-fade-in-up">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                    </span>
-                    <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">Based in Dubai</span>
-                </div>
+            if (dist < 500) { // Increased interaction radius
+                const force = (500 - dist) / 500;
+                const angle = Math.atan2(dy, dx);
+                const push = force * 2.0; 
+                p.vx += Math.cos(angle) * push;
+                p.vy += Math.sin(angle) * push;
+            }
+
+            // Particle Collisions
+            for (let j = i + 1; j < particles.current.length; j++) {
+                const p2 = particles.current[j];
+                const dx = p2.x - p.x;
+                const dy = p2.y - p.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const minDistance = p.radius + p2.radius;
+
+                if (distance < minDistance) {
+                    const angle = Math.atan2(dy, dx);
+                    const tx = p.x + Math.cos(angle) * minDistance;
+                    const ty = p.y + Math.sin(angle) * minDistance;
+                    const ax = (tx - p2.x) * 0.05; 
+                    const ay = (ty - p2.y) * 0.05;
+                    
+                    p.vx -= ax;
+                    p.vy -= ay;
+                    p2.vx += ax;
+                    p2.vy += ay;
+                }
+            }
+
+            // Ambient float
+            if (Math.abs(p.vx) < 0.1) p.vx += (Math.random() - 0.5) * 0.05;
+            if (Math.abs(p.vy) < 0.1) p.vy += (Math.random() - 0.5) * 0.05;
+
+            // Draw 3D Blue Bubble Effect
+            const gradient = ctx.createRadialGradient(
+                p.x - p.radius * 0.3, 
+                p.y - p.radius * 0.3, 
+                p.radius * 0.1, 
+                p.x, 
+                p.y, 
+                p.radius
+            );
+            
+            // 3D Lighting: Deep Electric Blue
+            gradient.addColorStop(0, 'rgba(147, 197, 253, 0.9)'); // Bright highlight (Blue-300)
+            gradient.addColorStop(0.2, 'rgba(59, 130, 246, 0.6)'); // Core (Blue-500)
+            gradient.addColorStop(0.6, 'rgba(30, 58, 138, 0.3)'); // Deep depth (Blue-900)
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)'); // Fade edge
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+        });
+
+        animationFrameId.current = requestAnimationFrame(update);
+    };
+
+    update();
+
+    return () => {
+        window.removeEventListener('resize', resizeCanvas);
+        cancelAnimationFrame(animationFrameId.current);
+    };
+  }, []);
+
+  return (
+    <section ref={containerRef} id="home" className="relative min-h-screen flex flex-col overflow-hidden bg-transparent">
+      
+      {/* Interactive Physics Canvas */}
+      <canvas 
+        ref={canvasRef} 
+        className="absolute inset-0 z-0 pointer-events-none mix-blend-screen"
+      />
+
+      {/* Fixed Background Typography - Parallax Effect */}
+      <div 
+        className="fixed top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none z-0 mix-blend-difference"
+        style={{ transform: `translateY(${scrollY * 0.2}px)` }}
+      >
+          <div className="flex flex-col items-center leading-[0.8] select-none">
+            <h1 className="font-display font-extrabold text-[18vw] tracking-tighter text-white/10 opacity-100 whitespace-nowrap">
+              ABRAHAM
+            </h1>
+            <h1 className="font-display font-extrabold text-[18vw] tracking-tighter text-white/10 opacity-100 whitespace-nowrap ml-[1em]">
+              OLVERA
+            </h1>
+          </div>
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10 flex-1 flex flex-col justify-end pb-32 pointer-events-none">
+        {/* Content Card */}
+        <div className="max-w-4xl pointer-events-auto">
+            <div className="flex items-center gap-4 mb-8 animate-reveal" style={{ animationDelay: '0.2s' }}>
+                <div className="h-[1px] w-20 bg-primary"></div>
+                <span className="text-sm font-mono uppercase tracking-widest text-primary">Dubai • UAE</span>
             </div>
 
-            {/* Main Title - Massive Typography */}
-            <h1 className="font-display font-extrabold text-[12vw] leading-[0.8] tracking-tighter text-white mix-blend-difference mb-8">
-                FUTURE <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-primary bg-[length:200%_auto] animate-[shimmer_5s_linear_infinite]">
-                    ARCHITECT
-                </span>
-            </h1>
+            <h2 className="font-display font-bold text-6xl md:text-8xl text-white mb-8 leading-[0.9] animate-reveal" style={{ animationDelay: '0.3s' }}>
+              ARQUITECTO<br/>
+              <span className="text-gray-500">DEL FUTURO.</span>
+            </h2>
 
-            <p className="max-w-xl text-lg md:text-xl text-gray-400 font-light mb-12 leading-relaxed">
-                Building the next generation of <span className="text-white font-medium">AI-first companies</span>. 
-                Helping you navigate the digital evolution from Dubai to the world.
+            <p className="text-xl md:text-2xl text-gray-300 font-light leading-relaxed max-w-2xl animate-reveal" style={{ animationDelay: '0.4s' }}>
+              Reubicación estratégica, inversiones de alto impacto y dominio de la IA. 
+              Ayudo a visionarios a construir su legado en la economía digital.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6 w-full max-w-md">
-                <a 
-                    href="#ventures" 
-                    className="flex-1 group relative overflow-hidden rounded-full bg-white text-black px-8 py-4 font-bold transition-transform hover:scale-105 active:scale-95 text-center flex items-center justify-center gap-2"
-                >
-                    <span>My Ventures</span>
-                    <Icons.TrendingUp size={18} className="group-hover:translate-x-1 transition-transform" />
+            <div className="mt-12 flex gap-6 animate-reveal" style={{ animationDelay: '0.5s' }}>
+                <a href="#ventures" className="px-8 py-4 bg-primary text-white font-bold rounded-full hover:scale-105 transition-transform duration-300 shadow-[0_0_30px_rgba(59,130,246,0.4)]">
+                  Explorar Proyectos
                 </a>
-                <a 
-                    href="#contact" 
-                    className="flex-1 rounded-full border border-white/20 bg-transparent px-8 py-4 font-bold text-white transition-all hover:bg-white/10 hover:border-white/40 text-center backdrop-blur-sm"
-                >
-                    Contact Me
+                <a href="#contact" className="px-8 py-4 border border-white/20 text-white rounded-full hover:bg-white hover:text-black transition-all duration-300 backdrop-blur-md">
+                  Hablemos
                 </a>
             </div>
         </div>
-      </div>
 
-      {/* Decorative Elements */}
-      <div className="absolute bottom-10 left-10 hidden md:block text-xs font-mono text-gray-600">
-          <p>SCROLL TO EXPLORE</p>
-          <div className="h-12 w-px bg-gray-800 mt-4 mx-auto"></div>
-      </div>
-      
-      <div className="absolute bottom-10 right-10 hidden md:block">
-           <div className="w-32 h-32 rounded-full border border-gray-800 flex items-center justify-center animate-spin-slow">
-              <svg viewBox="0 0 100 100" className="w-full h-full p-2">
-                  <path id="curve" d="M 50 50 m -37 0 a 37 37 0 1 1 74 0 a 37 37 0 1 1 -74 0" fill="transparent"/>
-                  <text className="text-[10px] uppercase font-bold tracking-widest fill-gray-500">
-                      <textPath href="#curve">
-                          Abraham Olvera • AI • Innovation •
-                      </textPath>
-                  </text>
-              </svg>
-           </div>
       </div>
     </section>
   );

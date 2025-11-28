@@ -3,37 +3,53 @@ import { Icons, SOCIAL_LINKS } from '../constants';
 
 const Footer: React.FC = () => {
   return (
-    <footer id="contact" className="bg-black py-20 border-t border-gray-900">
-      <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-            <div>
-                <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">Hablemos del <br/> Futuro.</h2>
-                <p className="text-gray-400 max-w-md">
-                    Ya sea para potenciar tu empresa con IA, discutir oportunidades en Dubai o colaboraciones de marca.
-                </p>
-            </div>
-            <div className="flex flex-col gap-4 items-start md:items-end">
-                <a href={`mailto:contact@abrahamolvera.com`} className="text-2xl md:text-3xl text-white hover:text-blue-400 transition-colors font-display font-medium border-b border-gray-800 pb-2 hover:border-blue-400">
-                    contact@abrahamolvera.com
-                </a>
-                <div className="flex gap-4 mt-4">
-                    <a href={SOCIAL_LINKS.instagram} className="w-12 h-12 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-pink-500 hover:bg-gray-800 transition-all">
-                        <Icons.Instagram />
-                    </a>
-                    <a href={SOCIAL_LINKS.tiktok} className="w-12 h-12 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-cyan-400 hover:bg-gray-800 transition-all">
-                        <Icons.TikTok />
-                    </a>
-                </div>
-            </div>
+    <footer id="contact" className="w-full h-full flex flex-col justify-center bg-[#020202] relative overflow-hidden">
+      
+      {/* Background Video/Gradient Effect */}
+      <div className="absolute inset-0 bg-gradient-to-t from-blue-900/10 to-transparent pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-full h-[50vh] bg-gradient-to-b from-transparent to-black pointer-events-none"></div>
+
+      <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center">
+        
+        <span className="text-primary font-mono uppercase tracking-[0.3em] text-sm mb-8 animate-pulse">
+            Start Your Journey
+        </span>
+
+        <h2 className="font-display font-black text-[12vw] leading-[0.8] text-white mb-12 tracking-tighter mix-blend-difference">
+            HABLEMOS
+        </h2>
+
+        <div className="flex flex-col items-center gap-8 mb-16">
+            <p className="text-gray-400 text-xl md:text-2xl max-w-2xl font-light">
+                Dubai es el futuro. La IA es el vehículo. <br/>
+                <span className="text-white font-medium">¿Estás listo para subirte?</span>
+            </p>
+            <a 
+                href="mailto:contact@abrahamolvera.com" 
+                className="group relative inline-flex items-center gap-4 px-12 py-6 bg-white text-black rounded-full font-bold text-lg overflow-hidden transition-transform hover:scale-105"
+            >
+                <span className="relative z-10">Enviar Correo</span>
+                <Icons.Send size={20} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                <div className="absolute inset-0 bg-gray-200 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+            </a>
         </div>
 
-        <div className="border-t border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 gap-4">
-            <p>&copy; {new Date().getFullYear()} Abraham Olvera. Todos los derechos reservados.</p>
-            <div className="flex gap-6">
-                <a href="#" className="hover:text-gray-400">Privacidad</a>
-                <a href="#" className="hover:text-gray-400">Términos</a>
-            </div>
+        <div className="flex gap-12">
+             <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="text-gray-500 hover:text-white transition-colors transform hover:-translate-y-2 duration-300">
+               <Icons.Instagram size={28} />
+             </a>
+             <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noreferrer" className="text-gray-500 hover:text-white transition-colors transform hover:-translate-y-2 duration-300">
+               <Icons.TikTok size={28} />
+             </a>
+             <a href="#" className="text-gray-500 hover:text-white transition-colors transform hover:-translate-y-2 duration-300">
+               <Icons.Briefcase size={28} />
+             </a>
         </div>
+      </div>
+      
+      <div className="absolute bottom-8 left-0 w-full px-8 flex justify-between text-[10px] font-mono text-gray-700 uppercase tracking-widest">
+          <span>&copy; 2024 Abraham Olvera</span>
+          <span>Designed for the Future</span>
       </div>
     </footer>
   );

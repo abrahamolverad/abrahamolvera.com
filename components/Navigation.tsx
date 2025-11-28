@@ -20,41 +20,43 @@ const Navigation: React.FC = () => {
   };
 
   return (
-    <nav className="fixed top-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
-      <div className={`pointer-events-auto transition-all duration-500 ease-out border border-white/10 rounded-full px-6 py-3 flex items-center gap-8 ${
+    <nav className="fixed top-0 inset-x-0 z-50 flex justify-center py-6 pointer-events-none mix-blend-difference">
+      <div className={`pointer-events-auto transition-all duration-700 ease-luxury px-8 py-3 rounded-full flex items-center gap-12 ${
         isScrolled 
-          ? 'bg-black/80 backdrop-blur-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] scale-100' 
-          : 'bg-transparent border-transparent scale-105'
+          ? 'bg-white/10 backdrop-blur-md border border-white/10' 
+          : 'bg-transparent border border-transparent'
       }`}>
-        {/* Logo Icon Only */}
+        {/* Logo */}
         <div 
           onClick={() => scrollToSection('home')} 
-          className="cursor-pointer group relative"
+          className="cursor-pointer font-display font-bold text-xl tracking-tighter text-white"
         >
-          <div className="w-10 h-10 bg-white text-black font-display font-bold text-xl flex items-center justify-center rounded-full group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-            A
-          </div>
+          AO.
         </div>
 
         {/* Links */}
         <div className="hidden md:flex items-center gap-8">
-            {['Expertise', 'Ventures', 'Contact'].map((item) => (
+            {[
+              { id: 'ventures', label: 'Proyectos' },
+              { id: 'topics', label: 'Expertise' },
+              { id: 'contact', label: 'Contacto' }
+            ].map((item) => (
                 <button 
-                  key={item}
-                  onClick={() => scrollToSection(item.toLowerCase())}
-                  className="text-sm font-medium text-gray-400 hover:text-white transition-colors uppercase tracking-wide"
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className="text-xs font-medium text-gray-300 hover:text-white transition-colors uppercase tracking-[0.2em]"
                 >
-                    {item}
+                    {item.label}
                 </button>
             ))}
         </div>
 
         {/* Socials */}
-        <div className="flex items-center gap-4 pl-4 border-l border-white/10">
-             <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
+        <div className="flex items-center gap-4 border-l border-white/20 pl-6">
+             <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="text-white hover:text-primary transition-colors">
                <Icons.Instagram size={18} />
              </a>
-             <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
+             <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noreferrer" className="text-white hover:text-primary transition-colors">
                <Icons.TikTok size={18} />
              </a>
         </div>

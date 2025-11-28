@@ -7,7 +7,7 @@
     <meta name="description" content="Abraham Olvera: Experto en Inteligencia Artificial, inversiones y vida en Dubai. Fundador de The AIgnc, Rok-ai y Avant Media." />
     <meta name="keywords" content="Abraham Olvera, IA, Dubai, Inversiones, Carrera, The AIgnc, Rok-ai, TikTok, Instagram" />
     <meta name="author" content="Abraham Olvera" />
-    <title>Abraham Olvera | Architecting the Future</title>
+    <title>Abraham Olvera | Arquitecto del Futuro</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,7 +16,7 @@
         theme: {
           extend: {
             colors: {
-              background: '#030303',
+              background: '#050505',
               surface: '#0A0A0A',
               primary: '#3B82F6', // Electric Blue
               gold: '#FCD34D', // Dubai Gold
@@ -27,17 +27,29 @@
               display: ['Syne', 'sans-serif'],
             },
             backgroundImage: {
-              'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-              'noise': "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.05%22/%3E%3C/svg%3E')",
+              'noise': "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.07%22/%3E%3C/svg%3E')",
+            },
+            transitionTimingFunction: {
+              'luxury': 'cubic-bezier(0.16, 1, 0.3, 1)',
             },
             animation: {
               'spin-slow': 'spin 12s linear infinite',
               'float': 'float 6s ease-in-out infinite',
+              'reveal': 'reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'slide-up': 'slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
             },
             keyframes: {
               float: {
                 '0%, 100%': { transform: 'translateY(0)' },
                 '50%': { transform: 'translateY(-20px)' },
+              },
+              reveal: {
+                '0%': { transform: 'translateY(100%)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(100%)' },
+                '100%': { transform: 'translateY(0)' },
               }
             }
           },
@@ -48,30 +60,35 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-      /* Custom Scrollbar */
+      /* Hide Scrollbar for App-like feel */
       ::-webkit-scrollbar {
-        width: 6px;
+        display: none;
       }
-      ::-webkit-scrollbar-track {
-        background: #030303;
+      * {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
       }
-      ::-webkit-scrollbar-thumb {
-        background: #333;
-        border-radius: 10px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }
+      
       body {
-        background-color: #030303;
+        background-color: #050505;
         color: #F8FAFC;
         font-feature-settings: "cv11", "ss01";
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
       }
-      .text-glow {
-        text-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+      
+      .text-outline {
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+        color: transparent;
+      }
+      
+      .text-outline-hover:hover {
+        -webkit-text-stroke: 0px;
+        color: white;
       }
     </style>
   <script type="importmap">
