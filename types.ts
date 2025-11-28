@@ -7,6 +7,7 @@ export interface Venture {
   role: string;
   status: 'Active' | 'In Progress' | 'Coming Soon';
   link?: string;
+  instagram?: string;
   color: string;
 }
 

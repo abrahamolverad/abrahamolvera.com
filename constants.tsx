@@ -40,6 +40,21 @@ export const Icons = {
   ),
   Mic: ({size, ...props}: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size || "24"} height={size || "24"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+  ),
+  Activity: ({size, ...props}: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size || "24"} height={size || "24"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+  ),
+  Layers: ({size, ...props}: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size || "24"} height={size || "24"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+  ),
+  Image: ({size, ...props}: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size || "24"} height={size || "24"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+  ),
+  Smartphone: ({size, ...props}: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size || "24"} height={size || "24"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+  ),
+  PenTool: ({size, ...props}: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size || "24"} height={size || "24"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
   )
 };
 
@@ -53,28 +68,32 @@ export const VENTURES: Venture[] = [
   {
     id: 'rok-ai',
     name: 'Rok-ai',
-    description: 'Podcast sobre el futuro de la humanidad, la inteligencia artificial y la evolución digital.',
-    role: 'Host & Fundador',
-    status: 'In Progress',
-    color: 'from-purple-500 to-pink-500',
+    description: 'He puesto mis 10 años de experiencia en trading en este proyecto. Rok-Ai es un Trading Bot enfocado en Acciones del mercado de USA.',
+    role: 'Fundador',
+    status: 'Active',
+    color: 'from-purple-900 to-indigo-900',
+    link: 'https://rok-ai.com',
+    instagram: 'https://instagram.com/rok.ai_bot'
   },
   {
     id: 'the-aignc',
     name: 'The AIgnc',
-    description: 'Agencia especializada en implementación de IA, automatización y soluciones tecnológicas para empresas globales.',
+    description: 'Es una agencia enfocada en SME en Dubai que provee automatización de procesos impulsados con Inteligencia Artificial.',
     role: 'CEO',
     status: 'Active',
-    color: 'from-blue-500 to-cyan-500',
-    link: '#',
+    color: 'from-blue-600 to-cyan-600',
+    link: 'https://instagram.com/theaignc',
+    instagram: 'https://instagram.com/theaignc'
   },
   {
     id: 'avant-media',
-    name: 'Avant Media',
-    description: 'Casa productora de medios digitales de alto impacto para marcas personales y corporativas.',
+    name: 'Avant Mediax',
+    description: 'Es una agencia de Social Media basada en Dubai que provee consultoría, diseño, estrategia y administración de redes sociales para SME.',
     role: 'Cofundador',
     status: 'Active',
-    color: 'from-orange-500 to-red-500',
-    link: '#',
+    color: 'from-gray-800 to-gray-950', // Updated to Dark Gradient
+    link: 'https://avantmediax.com/',
+    instagram: 'https://instagram.com/avantmediax'
   }
 ];
 
@@ -115,9 +134,9 @@ Sobre Abraham Olvera:
 - Tiene una marca personal fuerte en Instagram y TikTok (@soyabraham.ia).
 - Temas clave: Inversiones, IA, Futuro, Dubai, Desarrollo de Carrera.
 - Proyectos: 
-    1. Rok-ai (Podcast en progreso).
-    2. The AIgnc (Agencia de IA).
-    3. Avant Media (Media).
+    1. Rok-ai (Trading Bot de acciones USA).
+    2. The AIgnc (Agencia de Automatización IA).
+    3. Avant Mediax (Agencia de Social Media).
 
 Si te preguntan sobre reubicarse a Dubai: Da consejos prácticos y menciona que Abraham ofrece asesoría.
 Si te preguntan sobre inversiones: Habla de mentalidad a largo plazo y tecnología.

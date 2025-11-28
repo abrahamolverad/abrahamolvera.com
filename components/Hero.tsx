@@ -196,15 +196,19 @@ const Hero: React.FC = () => {
                 <span className="text-sm font-mono uppercase tracking-widest text-primary">Dubai • UAE</span>
             </div>
 
-            <h2 className="font-display font-bold text-6xl md:text-8xl text-white mb-8 leading-[0.9] animate-reveal" style={{ animationDelay: '0.3s' }}>
-              ARQUITECTO<br/>
-              <span className="text-gray-500">DEL FUTURO.</span>
+            <h2 className="font-display font-bold text-5xl md:text-7xl text-white mb-8 leading-[0.9] animate-reveal" style={{ animationDelay: '0.3s' }}>
+              IA • FINANZAS <br/>
+              <span className="text-gray-500">CARRERA</span>
             </h2>
 
-            <p className="text-xl md:text-2xl text-gray-300 font-light leading-relaxed max-w-2xl animate-reveal" style={{ animationDelay: '0.4s' }}>
-              Reubicación estratégica, inversiones de alto impacto y dominio de la IA. 
-              Ayudo a visionarios a construir su legado en la economía digital.
-            </p>
+            <div className="max-w-3xl animate-reveal" style={{ animationDelay: '0.4s' }}>
+              <p className="text-lg md:text-xl text-gray-300 font-light leading-relaxed mb-6">
+                Soy Abraham Olvera, profesional corporativo y creador de soluciones con IA. Enseño a personas y empresas a aprovechar la inteligencia artificial para automatizar tareas, tomar mejores decisiones financieras y avanzar en su carrera profesional sin perder su tiempo en teoría inútil.
+              </p>
+              <p className="text-lg md:text-xl text-gray-400 font-light leading-relaxed">
+                En este sitio comparto herramientas, guías prácticas y ejemplos reales de cómo usar IA en el trabajo, en las finanzas personales y en los negocios, así como mis 3 proyectos.
+              </p>
+            </div>
 
             <div className="mt-12 flex gap-6 animate-reveal" style={{ animationDelay: '0.5s' }}>
                 <a href="#ventures" className="px-8 py-4 bg-primary text-white font-bold rounded-full hover:scale-105 transition-transform duration-300 shadow-[0_0_30px_rgba(59,130,246,0.4)]">
